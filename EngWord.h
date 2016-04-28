@@ -2,22 +2,24 @@
 #define ELEMENT_H
 
 #include "Hash.h"
-
-class Element
+//definera här
+class EngWord
 {
 private:
 	// membervariables
 public:
 	// constructors, destructor, ...
+	EngWord();
+    ~EngWord();
 	// memberfunctions
 	// definition of == operator and != operator 
 };
 
 template<>
-class Hash<Element>
+class Hash<EngWord>
 {
 public:
-	int operator()(const Element& elem) const
+	int operator()(const EngWord & elem) const
 	{
 		// to be implement
 		// the integer returned is calculated from data in HashElement
