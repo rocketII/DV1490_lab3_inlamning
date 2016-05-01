@@ -1,3 +1,4 @@
+// Not created by Roderik Bauhn
 #ifndef HASH_H
 #define HASH_H
 //får ej modifieras

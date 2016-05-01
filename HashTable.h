@@ -1,3 +1,4 @@
+// Not created but edited by Roderik Bauhn.
 // not tested
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
@@ -5,14 +6,15 @@
 #include "EngWord.h"
 
 using namespace std;
+enum Marker
+{
+    OCCUPIED =0, DELETED, UNTOUCHED
+};
 template <typename HashElement>
 class HashTable
 {
 private:
-    enum Marker
-    {
-      OCCUPIED =0, DELETED, UNTOUCHED
-    };
+
 	// internal datastructure    insert array.
     HashElement* array;
     Marker *MarkerArray;
@@ -61,7 +63,7 @@ int HashTable<HashElement>::contains(const HashElement &EngWord) const
     int atIndex = -1;
     for (int i = 0; i < this->nrOfElements ; ++i)
     {
-        if((static_cast<EngWord>(this->array[i])) == (static_cast<EngWord>(EngWord)))
+        if((dynamic_cast<EngWord>(this->array[i])) == (dynamic_cast<EngWord>(EngWord)))
         {
             atIndex = i;
         }
@@ -86,10 +88,21 @@ bool HashTable<HashElement>::insert(const HashElement &EngWord)
     {
         if (this->MarkerArray[insertAtIndex] == Marker::OCCUPIED)
         {
-            if ((static_cast<EngWord>(this->array[insertAtIndex]) != (static_cast<EngWord>(EngWord))))
+            if ((dynamic_cast<EngWord>(this->array[insertAtIndex]) != (dynamic_cast<EngWord>(EngWord))))
             {
                 //linear probing. Meaning search for empty space to place obj
                 for (int i = insertAtIndex; i < this->getnrOfElements(); ++i)
+                {
+                    if(this->MarkerArray[i] == Marker::UNTOUCHED)
+                    {
+                        flag = true;
+                        this->array[insertAtIndex] = EngWord;
+                        this->MarkerArray[i] = Marker::OCCUPIED;
+                        this->nrOfElements++;
+                        return flag;
+                    }
+                }
+                for (int i = 0; i < insertAtIndex; ++i)
                 {
                     if(this->MarkerArray[i] == Marker::UNTOUCHED)
                     {
@@ -109,8 +122,49 @@ bool HashTable<HashElement>::insert(const HashElement &EngWord)
 template <typename HashElement>
 bool HashTable<HashElement>::remove(const HashElement &EngWord)
 {
-    this->nrOfElements--;
-	return false;
+    bool flag = false;
+    int rmAtIndex;
+    rmAtIndex = myHash(EngWord);
+
+    if(this->MarkerArray[rmAtIndex] == Marker::OCCUPIED)
+    {
+
+            if ((dynamic_cast<EngWord>(this->array[rmAtIndex]) != (dynamic_cast<EngWord>(EngWord))))
+            {
+                //linear probing. Meaning search for empty space to place obj
+                for (int i = rmAtIndex; i < this->getnrOfElements(); ++i)
+                {
+                    if(this->MarkerArray[i] == Marker::OCCUPIED)
+                    {
+                        if((dynamic_cast<EngWord>(this->array[rmAtIndex]) == (dynamic_cast<EngWord>(EngWord))))
+                        {
+                            flag = true;
+                            this->array[rmAtIndex] = EngWord(" ");
+                            this->MarkerArray[i] = Marker::DELETED;
+                            this->nrOfElements--;
+                            return flag;
+                        }
+                    }
+                }
+                for (int i = 0; i < rmAtIndex; ++i)
+                {
+                    if(this->MarkerArray[i] == Marker::OCCUPIED)
+                    {
+                        if((dynamic_cast<EngWord>(this->array[rmAtIndex]) == (dynamic_cast<EngWord>(EngWord))))
+                        {
+                            flag = true;
+                            this->array[rmAtIndex] = EngWord(" ");
+                            this->MarkerArray[i] = Marker::DELETED;
+                            this->nrOfElements--;
+                            return flag;
+                        }
+                    }
+                }
+            }
+
+
+    }
+    return flag;
 }
 template <typename HashElement>
 const HashElement &HashTable<HashElement>::get(int index) const
@@ -125,6 +179,9 @@ const HashElement &HashTable<HashElement>::get(int index) const
     }
     //else throw out of bounds
 }
+
+
+
 template <typename HashElement>
 void HashTable<HashElement>::makeEmpty()
 {

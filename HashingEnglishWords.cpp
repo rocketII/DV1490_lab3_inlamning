@@ -1,8 +1,20 @@
+/*
+ * Överst i filen skriver du en kommentar i vilken du motiverar storleken på hashtabellen, dvs
+   antalet ingångar (entries) samt hur du definierat hashfunktionen för EngWord. Vidare ska du
+   redogöra för det intervall hashfunktionen (genom definitionen av operatorn ()) för EngWord
+   omfattar.
+
+   Jag motiverar hashtabellens storlek med att den bör vara antal element faktor två.
+   HashTabellen blir ju sämre med hänsyn på komplexitet ju fylld den blir. Jag vill ha tabellen högst 60% fylld.
+
+   Min HashFunktion tar det första ascii värdet i strängen multiplicerat med det andra om det nu finns annars blir det faktor två på den första.
+
+ */
 //
-// Created by root on 2016-04-28.
+// Created by Roderik Bauhn on 2016-04-28.
 //
 #include "HashTable.h"
-#include "EngWord.h"
+//#include "EngWord.h" used during testing.
 #include <iostream>
 #include <fstream>
 #include <sstream>
