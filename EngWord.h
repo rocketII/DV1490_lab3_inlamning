@@ -18,7 +18,8 @@ public:
 	EngWord(string word = "empty");
     ~EngWord();
 	// memberfunctions
-    const string &getHolder() const {
+    const string &getHolder() const
+    {
         return holder;
     }
 
@@ -43,10 +44,10 @@ public:
         //EngWord obj handles strings so we calculate some characteristically number based on ASCII values casted from string char.
 		string first = elem.getHolder();
         int first_ = (int) first[0];
-        int second_=-1;
+        int second_=2;
         if(first.length() > 1)
         {
-            second_ =(int) first[2];
+            second_ =(int) first[1];
         }
 
 		return (first_ * second_);

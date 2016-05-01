@@ -181,7 +181,6 @@ const HashElement &HashTable<HashElement>::get(int index) const
 }
 
 
-
 template <typename HashElement>
 void HashTable<HashElement>::makeEmpty()
 {
