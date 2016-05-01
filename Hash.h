@@ -1,6 +1,7 @@
 #ifndef HASH_H
 #define HASH_H
 //får ej modifieras
+//tested
 template <typename Key>
 class Hash
 {
