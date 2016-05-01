@@ -25,11 +25,11 @@ using namespace std;
  o En funktion(5) i vilken användaren matar in engelska ord som ska tas bort från
    hashtabellen. Om ett ord inte finns i hashtabellen meddelas detta.
  * */
-void func1(void);
-HashTable<EngWord>& func2(int count,const EngWord* arrayPtr)const;
-void func3(HashTable<EngWord>& origin);
-void func4(void);
-void func5(void);
+HashTable<EngWord>* func1(void);
+HashTable<EngWord>* func2(int count,const EngWord* arrayPtr)const;
+void func3(HashTable<EngWord>* origin);
+void func4(HashTable<EngWord>* origin);
+void func5(HashTable<EngWord>* origin);
 
 int main(void)
 {
@@ -39,12 +39,12 @@ int main(void)
      func1();
      o Orden placeras i hashtabellen
      func2();
-     o   En meny presenteras där användaren kan välja att
-     o mata in en mening för att få besked om vilka av orden i meningen som inte finns i
-       ordlistan (hashtabellen)
-     o lägg in nya ord
-     o ta bort ord
-     o avsluta
+     o En meny presenteras där användaren kan välja att:
+        o mata in en mening för att få besked om vilka av orden i meningen som inte finns i
+          ordlistan (hashtabellen)
+        o lägg in nya ord
+        o ta bort ord
+        o avsluta
      */
 /*
     EngWord testSub("ape");
@@ -57,20 +57,44 @@ int main(void)
     cout <<"hash for word: " << testSubHash(testSub)<<endl;
     cout <<"hash for word: " << testSub2Hash(testSub2)<<endl;
     */
-    string insert="myWorld";
-    EngWord mao(insert);
-    HashTable<EngWord> testZone(10);
-    testZone.insert(mao);
-    cout <<"at Index nr: "<<testZone.contains(mao)<<endl;
+    HashTable<EngWord> *ptr;
+    string menu;
+    ptr = func1();
+    do
+    {
+        //clean terminal
+        //linux
+        system("clear");
+        //windows
+        system("cls");
+        cout<<"WordList using hash table.\nChose one.\n1.Enter a sentence. Words unrecogniced gets printed to screen.\n2.Add word.\n3.Remove word.\n4.Exit.\nChoice: ";
+        getline(cin, menu);
+        switch(menu[0])
+        {
+            case'1':
+                func3(ptr);
+                break;
+            case'2':
+                func4(ptr);
+                break;
+            case'3':
+                func5(ptr);
+                break;
+            case'4':
+                cout<<"Exiting"<<endl;
+                break;
+        }
+    }while(menu[0]=='4');
     return 0;
 }
 
 
-void func1(void)
+HashTable<EngWord>* func1(void)
 {
     //o Orden läses från fil
     string tmp;
     int count=0;
+    EngWord *ptrArray;
     //for Windows users   I use Linux so... a little bit to test right now. :-(
     //ifstream myfile ("C:\\temp\\engWords.txt");
     ifstream myfile ("./engWords.txt");
@@ -82,7 +106,7 @@ void func1(void)
         }
         //double the array size
 
-        EngWord *ptrArray = new EngWord[count];
+        ptrArray = new EngWord[count];
         myfile.clear();
         myfile.seekg(0, ios::beg);
         while ( getline (myfile,tmp) )
@@ -91,23 +115,26 @@ void func1(void)
             ptrArray[i] = EngWord(tmp);
             i++;
         }
-        func2(count, ptrArray);
+
         myfile.close();
     }
-
-    else cout << "Unable to open file";
+    else
+        cout << "Unable to open file";
+    return func2(count, ptrArray);
 }
-HashTable<EngWord>& func2(int count,EngWord* arrayPtr)const
+HashTable<EngWord>* func2(int count,EngWord* arrayPtr)const
 {
-    HashTable<EngWord> array(count*2);
+    HashTable<EngWord> *array;
+    HashTable<EngWord> obj(count*2);
+    array=&obj;
     for (int i = 0; i < count ; ++i)
     {
-        array.insert(EngWord(arrayPtr[i]));
+        array->insert(EngWord(arrayPtr[i]));
     }
-    cout<<"Load factor: "<<array.loadFactor()<<endl;
+    cout<<"Load factor: "<<array->loadFactor()<<endl;
     return array;
 }
-void func3(HashTable<EngWord>& origin)
+void func3(HashTable<EngWord>* origin)
 {
     //En funktion(3) i vilken användaren matar in en engelsk mening vilken avslutas med en
     //punkt (.) och får besked om vilka ord som inte ingick i ordlistan. De ord som inte ingick i
@@ -143,15 +170,50 @@ void func3(HashTable<EngWord>& origin)
     wordCount++;
     for (int i = 0; i < wordCount ; ++i)
     {
-            if(-1 == origin.contains(EngWord(word[i])))
+            if(-1 == origin->contains(EngWord(word[i])))
             {
                 cout<<"word "<< word[i]<<" does not exist in table!"<<endl;
             }
     }
 }
-void func4(void)
+void func4(HashTable<EngWord>* origin)
 {
     //En funktion(4) i vilken användaren matar in engelska ord som läggs in i hashtabellen. Om
-    //ett ord redan finna i tabellen ska detta meddelas och ordet läggs inte in i tabellen.
+    //ett ord redan finns i tabellen ska detta meddelas och ordet läggs inte in i tabellen.
+    string choice, word;
+    do
+    {
+        cout << "Want to enter an english word?(y/n): ";
+        getline(cin,choice );
+        if(tolower(choice[0])=='y')
+        {
+            cout << "\nWrite one word followed by enter/newline key: ";
+            getline(cin, word);
+            if(origin->insert(word) == false)
+            {
+                cout << "\n sorry word already exist\n";
+            }
+        }
+    }while(tolower(choice[0]) != 'n');
 }
-void func5(void){}
+void func5(HashTable<EngWord>* origin)
+{
+    //En funktion(5) i vilken användaren matar in engelska ord som ska tas bort från
+    //hashtabellen. Om ett ord inte finns i hashtabellen meddelas detta.
+    string choice, word2rm;
+    do
+    {
+        cout << "Want to enter an english word?(y/n): ";
+        getline(cin,choice );
+        if(tolower(choice[0])=='y')
+        {
+            cout << "\nWrite one word followed by enter/newline key: ";
+            getline(cin, word2rm);
+            if(origin->remove(EngWord(word2rm)) == false)
+            {
+                cout << "\n sorry word doese not exist henche cannot be removed\n";
+            }
+        }
+    }while(tolower(choice[0]) != 'n');
+}
+
