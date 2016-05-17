@@ -18,16 +18,13 @@
 // Created by Roderik Bauhn on 2016-04-28.
 //
 
-/*
+/* Komplettering Tidsgräns: den 25 maj 2016 13:00
  * FIX
  * Codes            name
  * --------------------------------------
  * 0xA0              Ordlista – programmet som använder Hashtabell: kraschar vid körning
-
-   0xA1              Hashfunktionen och hashtabellens storlek: hashfunktionen ger dålig spridning och därmed blir det många kollisioner, tabellstorleken är bra men bör vara ett primtal
-
-
-
+ *
+ * 0xA1              Hashfunktionen och hashtabellens storlek: hashfunktionen ger dålig spridning och därmed blir det många kollisioner, tabellstorleken är bra men bör vara ett primtal
  */
 #include "EngWord.h"
 #include "HashTable.h"
