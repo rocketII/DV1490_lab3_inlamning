@@ -9,12 +9,28 @@
 
    Min HashFunktion tar det första ascii värdet i strängen multiplicerat med det andra om det nu finns annars blir det faktor två på den första.
 
+   som lägst ger hashningen ett tiotal * 2. Som max ett hundratal se ASCII tabellen * sig själv. Om vi stödjer UTF8 blir  det ännu större.
+
+   sen kör ju myhash() modolus TableSize så vi hamnar från 0 till 1999.
+
  */
 //
 // Created by Roderik Bauhn on 2016-04-28.
 //
+
+/*
+ * FIX
+ * Codes            name
+ * --------------------------------------
+ * 0xA0              Ordlista – programmet som använder Hashtabell: kraschar vid körning
+
+   0xA1              Hashfunktionen och hashtabellens storlek: hashfunktionen ger dålig spridning och därmed blir det många kollisioner, tabellstorleken är bra men bör vara ett primtal
+
+
+
+ */
+#include "EngWord.h"
 #include "HashTable.h"
-//#include "EngWord.h" used during testing.
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -38,7 +54,7 @@ using namespace std;
    hashtabellen. Om ett ord inte finns i hashtabellen meddelas detta.
  * */
 HashTable<EngWord>* func1(void);
-HashTable<EngWord>* func2(int count,const EngWord* arrayPtr)const;
+HashTable<EngWord>* func2(int count, EngWord* arrayPtr);
 void func3(HashTable<EngWord>* origin);
 void func4(HashTable<EngWord>* origin);
 void func5(HashTable<EngWord>* origin);
@@ -106,35 +122,40 @@ HashTable<EngWord>* func1(void)
     //o Orden läses från fil
     string tmp;
     int count=0;
+    int i=0;
     EngWord *ptrArray;
-    //for Windows users   I use Linux so... a little bit to test right now. :-(
+    //for Windows users   I use Linux so.. I comment. :-(
     //ifstream myfile ("C:\\temp\\engWords.txt");
-    ifstream myfile ("./engWords.txt");
+    ifstream myfile ("/root/IDEstorage/DV1490/labbar/DV1490_lab3_inlamning/engWords.txt");
     if (myfile.is_open())
     {
-        while ( getline (myfile,tmp) )
+        while ( getline(myfile,tmp) )
         {
             count++;
+
         }
         //double the array size
 
         ptrArray = new EngWord[count];
         myfile.clear();
-        myfile.seekg(0, ios::beg);
-        while ( getline (myfile,tmp) )
+        myfile.seekg(0, ios::beg); //start att beginning.
+        count=1;
+        while ( getline(myfile,tmp) )
         {
-            int i=0;
+            //debug
+            cout<<count<<' '<<tmp<<'\n';
             ptrArray[i] = EngWord(tmp);
-            i++;
+            i++; count++;
         }
 
         myfile.close();
     }
     else
         cout << "Unable to open file";
+    //HashTable<EngWord>* func2(int count,const EngWord* arrayPtr);
     return func2(count, ptrArray);
 }
-HashTable<EngWord>* func2(int count,EngWord* arrayPtr)const
+HashTable<EngWord>* func2(int count,EngWord* arrayPtr)
 {
     HashTable<EngWord> *array;
     HashTable<EngWord> obj(count*2);

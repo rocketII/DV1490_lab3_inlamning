@@ -1,9 +1,23 @@
+/*
+ *
+Övrigt i hashtabellen:
+Fix
+codes    details
+-----------------------------------
+0x0     Destruktorn ska ha [] efter delete
+
+0x1     Contains är inte ok eftersomden utför linjärsökning från position 0 och framåt, hashtabeller ska ha låg kostnad för alla operationer (nära konstant tid), ingen typomvandling krävs efersom == och != är definierad för klasstypen EngWord, däremot ska du använda elem i parameterlistan för att inte få konflikter vid instantieringen när HashElement ersätts av EngWord
+
+0x2     I insert är det inte korrekt att vid sonderingen/probningen använda antalet element som gräns, du behöver inom en och samma iteration undersöka om den plats om undersöks är oanvänd eller borttagen eftersom det i dessa båda fall är dags att placera in det nya elementet
+
+0x3     I makeEmpty behövs ingen avallokeraing av arrayerna för att därefter nyallokeras, sätt status för alla till oanvänd och glöm inte att sätta antalet element till 0
+ */
 // Not created but edited by Roderik Bauhn.
 // not tested
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 #include <string>
-#include "EngWord.h"
+
 
 using namespace std;
 enum Marker
@@ -63,7 +77,9 @@ int HashTable<HashElement>::contains(const HashElement &EngWord) const
     int atIndex = -1;
     for (int i = 0; i < this->nrOfElements ; ++i)
     {
-        if((dynamic_cast<EngWord>(this->array[i])) == (dynamic_cast<EngWord>(EngWord)))
+        //error: ‘EngWord’ does not name a type dynamic_cast<EngWord>
+        //                                                       ^
+        if((static_cast<HashElement>(this->array[i])) == (static_cast<HashElement>(EngWord)))
         {
             atIndex = i;
         }
@@ -86,9 +102,13 @@ bool HashTable<HashElement>::insert(const HashElement &EngWord)
     }
     else
     {
+        //error: ‘EngWord’ does not name a type dynamic_cast<EngWord>
+        //                                                       ^
         if (this->MarkerArray[insertAtIndex] == Marker::OCCUPIED)
         {
-            if ((dynamic_cast<EngWord>(this->array[insertAtIndex]) != (dynamic_cast<EngWord>(EngWord))))
+            //error: ‘EngWord’ does not name a type dynamic_cast<EngWord>
+            //                                                       ^
+            if ((static_cast<HashElement>(this->array[insertAtIndex]) != (static_cast<HashElement>(EngWord))))
             {
                 //linear probing. Meaning search for empty space to place obj
                 for (int i = insertAtIndex; i < this->getnrOfElements(); ++i)
@@ -125,21 +145,25 @@ bool HashTable<HashElement>::remove(const HashElement &EngWord)
     bool flag = false;
     int rmAtIndex;
     rmAtIndex = myHash(EngWord);
-
+    //error: ‘EngWord’ does not name a type dynamic_cast<EngWord>
+    //                                                       ^
     if(this->MarkerArray[rmAtIndex] == Marker::OCCUPIED)
     {
-
-            if ((dynamic_cast<EngWord>(this->array[rmAtIndex]) != (dynamic_cast<EngWord>(EngWord))))
+        //error: ‘EngWord’ does not name a type dynamic_cast<EngWord>
+        //                                                       ^
+            if ((static_cast<HashElement>(this->array[rmAtIndex]) != (static_cast<HashElement>(EngWord))))
             {
                 //linear probing. Meaning search for empty space to place obj
                 for (int i = rmAtIndex; i < this->getnrOfElements(); ++i)
                 {
                     if(this->MarkerArray[i] == Marker::OCCUPIED)
                     {
-                        if((dynamic_cast<EngWord>(this->array[rmAtIndex]) == (dynamic_cast<EngWord>(EngWord))))
+                        //error: ‘EngWord’ does not name a type dynamic_cast<EngWord>
+                        //                                                       ^
+                        if((static_cast<HashElement>(this->array[rmAtIndex]) == (static_cast<HashElement>(EngWord))))
                         {
                             flag = true;
-                            this->array[rmAtIndex] = EngWord(" ");
+                            this->array[rmAtIndex] = HashElement();
                             this->MarkerArray[i] = Marker::DELETED;
                             this->nrOfElements--;
                             return flag;
@@ -150,10 +174,11 @@ bool HashTable<HashElement>::remove(const HashElement &EngWord)
                 {
                     if(this->MarkerArray[i] == Marker::OCCUPIED)
                     {
-                        if((dynamic_cast<EngWord>(this->array[rmAtIndex]) == (dynamic_cast<EngWord>(EngWord))))
+
+                        if((static_cast<HashElement>(this->array[rmAtIndex]) == (static_cast<HashElement>(EngWord))))
                         {
                             flag = true;
-                            this->array[rmAtIndex] = EngWord(" ");
+                            this->array[rmAtIndex] = HashElement();
                             this->MarkerArray[i] = Marker::DELETED;
                             this->nrOfElements--;
                             return flag;
@@ -192,7 +217,7 @@ void HashTable<HashElement>::makeEmpty()
 template <typename HashElement>
 double HashTable<HashElement>::loadFactor() const
 {
-    double loadFactor = (this->nrOfElements / this->hashTableSize);
+    double loadFactor = ((double)this->nrOfElements / (double)this->hashTableSize);
 	return loadFactor;
 }
 template <typename HashElement>

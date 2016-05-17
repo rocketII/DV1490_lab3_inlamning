@@ -1,3 +1,6 @@
+// Klassen EngWord: OK
+//Hanterar att klara kombinationer av insättning, borttagning och sökning: OK, genom att använda en parallell array med status vilket hanteras mha enum
+//Cirkulär sondering/probning: nästan ok men antalet element kan inte vara gränsen för när det är dags att börja om på 0
 // Not Created but edited by Roderik Bauhn.
 //tested
 #ifndef ELEMENT_H
