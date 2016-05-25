@@ -1,16 +1,16 @@
 /*
  *
 Övrigt i hashtabellen:
-Fix
-codes    details
------------------------------------
-0x0     Destruktorn ska ha [] efter delete
+done    Fix
+        codes    details
+--------------------------------------------------------------------
+1        0x0     Destruktorn ska ha [] efter delete
 
-0x1     Contains är inte ok eftersomden utför linjärsökning från position 0 och framåt, hashtabeller ska ha låg kostnad för alla operationer (nära konstant tid), ingen typomvandling krävs efersom == och != är definierad för klasstypen EngWord, däremot ska du använda elem i parameterlistan för att inte få konflikter vid instantieringen när HashElement ersätts av EngWord
+0        0x1     Contains är inte ok eftersomden utför linjärsökning från position 0 och framåt, hashtabeller ska ha låg kostnad för alla operationer (nära konstant tid), ingen typomvandling krävs efersom == och != är definierad för klasstypen EngWord, däremot ska du använda elem i parameterlistan för att inte få konflikter vid instantieringen när HashElement ersätts av EngWord
 
-0x2     I insert är det inte korrekt att vid sonderingen/probningen använda antalet element som gräns, du behöver inom en och samma iteration undersöka om den plats om undersöks är oanvänd eller borttagen eftersom det i dessa båda fall är dags att placera in det nya elementet
+0        0x2     I insert är det inte korrekt att vid sonderingen/probningen använda antalet element som gräns, du behöver inom en och samma iteration undersöka om den plats om undersöks är oanvänd eller borttagen eftersom det i dessa båda fall är dags att placera in det nya elementet
 
-0x3     I makeEmpty behövs ingen avallokeraing av arrayerna för att därefter nyallokeras, sätt status för alla till oanvänd och glöm inte att sätta antalet element till 0
+1        0x3     I makeEmpty behövs ingen avallokeraing av arrayerna för att därefter nyallokeras, sätt status för alla till oanvänd och glöm inte att sätta antalet element till 0
  */
 // Not created but edited by Roderik Bauhn.
 // not tested
@@ -44,7 +44,7 @@ public:
 	HashTable(const HashTable& aTable) = delete;
 	virtual ~HashTable();
 	HashTable& operator=(const HashTable& aTable) = delete;
-	int contains(const HashElement & EngWord) const; // returns index or -1
+	int contains(const HashElement & elem) const; // returns index or -1
 	bool insert(const HashElement & EngWord);//anrop my hash sen leta efter existerande om ny lägg till.
 	bool remove(const HashElement & EngWord);//leta sen markera
 	const HashElement & get(int index) const;
@@ -68,22 +68,36 @@ HashTable<HashElement>::HashTable(int hashTableSize)
 template <typename HashElement>
 HashTable<HashElement>::~HashTable()
 {
-    delete this->array;
-    delete this->MarkerArray;
+    delete[] this->array;
+    delete[] this->MarkerArray;
 }
 template <typename HashElement>
-int HashTable<HashElement>::contains(const HashElement &EngWord) const
+//fix code:  0x1
+// Contains är inte ok eftersomden utför linjärsökning från position 0 och framåt,
+// hashtabeller ska ha låg kostnad för alla operationer (nära konstant tid),
+// ingen typomvandling krävs efersom == och != är definierad för klasstypen EngWord,
+// däremot ska du använda elem i parameterlistan för att inte få konflikter
+// vid instantieringen när HashElement ersätts av EngWord
+
+int HashTable<HashElement>::contains(const HashElement &elem) const
 {
     int atIndex = -1;
-    for (int i = 0; i < this->nrOfElements ; ++i)
+    int i =-2;
+    bool flag=true;
+    i = this->myHash(elem);
+    do
     {
-        //error: ‘EngWord’ does not name a type dynamic_cast<EngWord>
-        //                                                       ^
-        if((static_cast<HashElement>(this->array[i])) == (static_cast<HashElement>(EngWord)))
+
+        if((this->MarkerArray[i] == Marker::OCCUPIED) && this->array[i] == elem)
         {
             atIndex = i;
+            flag=false;
         }
-    }
+        else
+        {
+            i++;
+        }
+    }while(flag && i >-1 && this->MarkerArray[i] == Marker::OCCUPIED );
 	return atIndex;
 }
 template <typename HashElement>
@@ -209,10 +223,11 @@ const HashElement &HashTable<HashElement>::get(int index) const
 template <typename HashElement>
 void HashTable<HashElement>::makeEmpty()
 {
-    delete this->array;
-    delete this->MarkerArray;
-    this->array = new HashElement[this->hashTableSize];
-    this->MarkerArray = new Marker[this->hashTableSize];
+    for(int r=0; r < this->hashTableSize;r++)
+    {
+        this->array[r]=Marker::UNTOUCHED;
+    }
+    this->nrOfElements=0;
 }
 template <typename HashElement>
 double HashTable<HashElement>::loadFactor() const

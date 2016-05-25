@@ -46,14 +46,22 @@ public:
 		// the integer returned is calculated from data in HashElement
         //EngWord obj handles strings so we calculate some characteristically number based on ASCII values casted from string char.
 		string first = elem.getHolder();
+        //
+        //cout << "word: "<< first<<endl;
         int first_ = (int) first[0];
-        int second_=2;
+        int second_=200;
+        int third_=3000;
         if(first.length() > 1)
         {
-            second_ =(int) first[1];
+            second_ =(int) first[1]*1000;
+            if(first.length() > 2)
+            {
+                second_ =(int) first[2] * 20000;
+            }
         }
+        //ett annat sätt skulle kunna vara; gå igenom ordet varje char tolkas till int enligt ASCII sen kan man multiplicera/ upphöja till ett unikt värde för ordet.
 
-		return (first_ * second_);
+		return (first_ * second_ * third_);
 	}
 };
 EngWord::EngWord(const string word)

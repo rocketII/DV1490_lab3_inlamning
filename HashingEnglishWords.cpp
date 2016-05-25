@@ -21,10 +21,11 @@
 /* Komplettering Tidsgräns: den 25 maj 2016 13:00
  * FIX
  * Codes            name
- * --------------------------------------
+ * ---------------------------------------------------------------------------------------------------------------------
  * 0xA0              Ordlista – programmet som använder Hashtabell: kraschar vid körning
  *
  * 0xA1              Hashfunktionen och hashtabellens storlek: hashfunktionen ger dålig spridning och därmed blir det många kollisioner, tabellstorleken är bra men bör vara ett primtal
+ *
  */
 #include "EngWord.h"
 #include "HashTable.h"
@@ -122,8 +123,12 @@ HashTable<EngWord>* func1(void)
     int i=0;
     EngWord *ptrArray;
     //for Windows users   I use Linux so.. I comment. :-(
-    //ifstream myfile ("C:\\temp\\engWords.txt");
-    ifstream myfile ("/root/IDEstorage/DV1490/labbar/DV1490_lab3_inlamning/engWords.txt");
+    ifstream myfile ("C:\\temp\\engWords.txt");
+    if(!myfile.is_open())
+    {
+        myfile.close();
+        myfile.open("/root/IDEstorage/DV1490/labbar/DV1490_lab3_inlamning/engWords.txt");
+    }
     if (myfile.is_open())
     {
         while ( getline(myfile,tmp) )
@@ -171,7 +176,7 @@ void func3(HashTable<EngWord>* origin)
     //ordlistan ska presenteras som en utskrift.
     string *word = new string[1024];
     string sentence;
-    cout<<"Enter an english sentence and words in hashtable gets printed. End sentence with.";
+    cout<<"Enter an english sentence and words in hashtable gets printed. End sentence with '.' ";
     getline(cin,sentence );
     stringstream ss;
     int number =0;
