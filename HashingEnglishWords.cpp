@@ -26,10 +26,24 @@
  *
  * 0xA1              Hashfunktionen och hashtabellens storlek: hashfunktionen ger dålig spridning och därmed blir det många kollisioner, tabellstorleken är bra men bör vara ett primtal
  *
+   Komplettering Tidsgräns: den 25 maj 2016 13:00
+ * FIX
+ * Codes            name
+ * ---------------------------------------------------------------------------------------------------------------------
+ * 1)                func2(..) : har ska du genom anväöndande av dynamisk minnesallokering skapa HAshTabellen eftersom den lokalt skapade "avallokeras" när kösningen lämnar funktionen
+
+
+   2)                räknaren count blir 1 för mycket när antalet ord som läses räknas, vilket innebär att itertaione i func2 utförs en gång för mycket
+
+
+   3)                meny visas inte efter det att menyaval hanterats
+
+
+   4)               namngivningen med func2 etc är inte ok, det ska vara namn som anger vad "det handlar om"
  */
+#include <iostream>
 #include "EngWord.h"
 #include "HashTable.h"
-#include <iostream>
 #include <fstream>
 #include <sstream>
 using namespace std;
@@ -86,6 +100,7 @@ int main(void)
     HashTable<EngWord> *ptr;
     string menu;
     ptr = func1();
+    //3) meny visas inte efter det att menyaval hanterats
     do
     {
         //clean terminal
@@ -122,7 +137,7 @@ HashTable<EngWord>* func1(void)
     int count=0;
     int i=0;
     EngWord *ptrArray;
-    //for Windows users   I use Linux so.. I comment. :-(
+    //I use Linux so.. :-(
     ifstream myfile ("C:\\temp\\engWords.txt");
     if(!myfile.is_open())
     {
@@ -145,7 +160,7 @@ HashTable<EngWord>* func1(void)
         while ( getline(myfile,tmp) )
         {
             //debug
-            cout<<count<<' '<<tmp<<'\n';
+            //cout<<count<<' '<<tmp<<'\n';
             ptrArray[i] = EngWord(tmp);
             i++; count++;
         }
@@ -157,6 +172,15 @@ HashTable<EngWord>* func1(void)
     //HashTable<EngWord>* func2(int count,const EngWord* arrayPtr);
     return func2(count, ptrArray);
 }
+
+
+//1) func2(..) : har ska du genom anväöndande av dynamisk minnesallokering skapa HAshTabellen eftersom den lokalt skapade "avallokeras" när kösningen lämnar funktionen
+
+//2) räknaren count blir 1 för mycket när antalet ord som läses räknas, vilket innebär att itertaione i func2 utförs en gång för mycket
+
+
+
+//4) namngivningen med func2 etc är inte ok, det ska vara namn som anger vad "det handlar om"
 HashTable<EngWord>* func2(int count,EngWord* arrayPtr)
 {
     HashTable<EngWord> *array;
