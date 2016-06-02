@@ -26,7 +26,7 @@
  *
  * 0xA1              Hashfunktionen och hashtabellens storlek: hashfunktionen ger dålig spridning och därmed blir det många kollisioner, tabellstorleken är bra men bör vara ett primtal
  *
-   Komplettering Tidsgräns: den 25 maj 2016 13:00
+   Komplettering Tidsgräns: den 3 juni 2016 08:00
  * FIX
  * Codes            name
  * ---------------------------------------------------------------------------------------------------------------------
