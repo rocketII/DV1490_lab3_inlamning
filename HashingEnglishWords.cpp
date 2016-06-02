@@ -28,19 +28,104 @@
  *
    Komplettering Tidsgräns: den 3 juni 2016 08:00
  * FIX
- * Codes            name
+ * Codes  1/0 checked?        name
  * ---------------------------------------------------------------------------------------------------------------------
- * 1)                func2(..) : har ska du genom anväöndande av dynamisk minnesallokering skapa HAshTabellen eftersom den lokalt skapade "avallokeras" när kösningen lämnar funktionen
+ * 1)                      func2(..) : har ska du genom anväöndande av dynamisk minnesallokering skapa HAshTabellen eftersom den lokalt skapade "avallokeras" när kösningen lämnar funktionen
 
 
-   2)                räknaren count blir 1 för mycket när antalet ord som läses räknas, vilket innebär att itertaione i func2 utförs en gång för mycket
+   2)                     räknaren count blir 1 för mycket när antalet ord som läses räknas, vilket innebär att itertaione i func2 utförs en gång för mycket
 
 
-   3)                meny visas inte efter det att menyaval hanterats
+   3)                    meny visas inte efter det att menyval hanterats
 
 
-   4)               namngivningen med func2 etc är inte ok, det ska vara namn som anger vad "det handlar om"
- */
+   4)       1           namngivningen med func2 etc är inte ok, det ska vara namn som anger vad "det handlar om"
+
+   extra stuff..
+========================================================================================================================
+   case 1:
+========================================================================================================================
+   WordList using hash table.
+    Chose one.
+    1.Enter a sentence. Words unrecogniced gets printed to screen.
+    2.Add word.
+    3.Remove word.
+    4.Exit.
+    Choice: 2
+    Want to enter an english word?(y/n): y
+
+    Write one word followed by enter/newline key: cow
+    word: cow
+    word: cow got hash:235623
+    ==5978==
+    ==5978== Process terminating with default action of signal 8 (SIGFPE)
+    ==5978==  Integer divide by zero at address 0x802DD0E17
+    ==5978==    at 0x404471: HashTable<EngWord>::myHash(EngWord const&) const (HashTable.h:40)
+    ==5978==    by 0x403D3A: HashTable<EngWord>::insert(EngWord const&) (HashTable.h:115)
+    ==5978==    by 0x40341E: addOneEnglishWord2Dictionary(HashTable<EngWord>*) (HashingEnglishWords.cpp:253)
+    ==5978==    by 0x4028DE: main (HashingEnglishWords.cpp:119)
+    ==5978==
+    ==5978== HEAP SUMMARY:
+    ==5978==     in use at exit: 72,744 bytes in 4 blocks
+    ==5978==   total heap usage: 8 allocs, 4 frees, 75,896 bytes allocated
+    ==5978==
+    ==5978== LEAK SUMMARY:
+    ==5978==    definitely lost: 8 bytes in 1 blocks
+    ==5978==    indirectly lost: 0 bytes in 0 blocks
+    ==5978==      possibly lost: 0 bytes in 0 blocks
+    ==5978==    still reachable: 72,736 bytes in 3 blocks
+    ==5978==         suppressed: 0 bytes in 0 blocks
+    ==5978== Rerun with --leak-check=full to see details of leaked memory
+    ==5978==
+    ==5978== For counts of detected and suppressed errors, rerun with: -v
+    ==5978== Use --track-origins=yes to see where uninitialised values come from
+    ==5978== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+    Flyttalsfel (minnesutskrift skapad)
+
+
+========================================================================================================================
+   case 2:
+========================================================================================================================
+   WordList using hash table.
+    Chose one.
+    1.Enter a sentence. Words unrecogniced gets printed to screen.
+    2.Add word.
+    3.Remove word.
+    4.Exit.
+    Choice: 3
+    Want to enter an english word?(y/n): y
+
+    Write one word followed by enter/newline key: cow
+    word: cow
+    word: cow got hash:235623
+    ==6088==
+    ==6088== Process terminating with default action of signal 8 (SIGFPE)
+    ==6088==  Integer divide by zero at address 0x802DD0FF7
+    ==6088==    at 0x404471: HashTable<EngWord>::myHash(EngWord const&) const (HashTable.h:40)
+    ==6088==    by 0x40400A: HashTable<EngWord>::remove(EngWord const&) (HashTable.h:158)
+    ==6088==    by 0x4035F0: rmENGwordFromDictionary(HashTable<EngWord>*) (HashingEnglishWords.cpp:273)
+    ==6088==    by 0x4028EC: main (HashingEnglishWords.cpp:122)
+    ==6088==
+    ==6088== HEAP SUMMARY:
+    ==6088==     in use at exit: 72,744 bytes in 4 blocks
+    ==6088==   total heap usage: 8 allocs, 4 frees, 75,896 bytes allocated
+    ==6088==
+    ==6088== LEAK SUMMARY:
+    ==6088==    definitely lost: 8 bytes in 1 blocks
+    ==6088==    indirectly lost: 0 bytes in 0 blocks
+    ==6088==      possibly lost: 0 bytes in 0 blocks
+    ==6088==    still reachable: 72,736 bytes in 3 blocks
+    ==6088==         suppressed: 0 bytes in 0 blocks
+    ==6088== Rerun with --leak-check=full to see details of leaked memory
+    ==6088==
+    ==6088== For counts of detected and suppressed errors, rerun with: -v
+    ==6088== Use --track-origins=yes to see where uninitialised values come from
+    ==6088== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+    Flyttalsfel (minnesutskrift skapad)
+
+
+*/
+
 #include <iostream>
 #include "EngWord.h"
 #include "HashTable.h"
@@ -65,11 +150,11 @@ using namespace std;
  o En funktion(5) i vilken användaren matar in engelska ord som ska tas bort från
    hashtabellen. Om ett ord inte finns i hashtabellen meddelas detta.
  * */
-HashTable<EngWord>* func1(void);
-HashTable<EngWord>* func2(int count, EngWord* arrayPtr);
-void func3(HashTable<EngWord>* origin);
-void func4(HashTable<EngWord>* origin);
-void func5(HashTable<EngWord>* origin);
+HashTable<EngWord>* ReadData(void);
+HashTable<EngWord>* addWords2Dictionary(int count, EngWord *arrayPtr);
+void englishSentenceAnalysis(HashTable<EngWord> *origin);
+void addOneEnglishWord2Dictionary(HashTable<EngWord> *origin);
+void rmENGwordFromDictionary(HashTable<EngWord> *origin);
 
 int main(void)
 {
@@ -99,7 +184,8 @@ int main(void)
     */
     HashTable<EngWord> *ptr;
     string menu;
-    ptr = func1();
+    ptr = ReadData();
+    bool menuFlag=true;
     //3) meny visas inte efter det att menyaval hanterats
     do
     {
@@ -113,24 +199,26 @@ int main(void)
         switch(menu[0])
         {
             case'1':
-                func3(ptr);
+                englishSentenceAnalysis(ptr);
                 break;
             case'2':
-                func4(ptr);
+                addOneEnglishWord2Dictionary(ptr);
                 break;
             case'3':
-                func5(ptr);
+                rmENGwordFromDictionary(ptr);
                 break;
             case'4':
                 cout<<"Exiting"<<endl;
+                menuFlag =false;
                 break;
         }
-    }while(menu[0]=='4');
+    }while(menuFlag);
+    delete ptr;
     return 0;
 }
 
 
-HashTable<EngWord>* func1(void)
+HashTable<EngWord>* ReadData(void)
 {
     //o Orden läses från fil
     string tmp;
@@ -156,7 +244,7 @@ HashTable<EngWord>* func1(void)
         ptrArray = new EngWord[count];
         myfile.clear();
         myfile.seekg(0, ios::beg); //start att beginning.
-        count=1;
+        count=0;
         while ( getline(myfile,tmp) )
         {
             //debug
@@ -169,23 +257,19 @@ HashTable<EngWord>* func1(void)
     }
     else
         cout << "Unable to open file";
+
     //HashTable<EngWord>* func2(int count,const EngWord* arrayPtr);
-    return func2(count, ptrArray);
+    return addWords2Dictionary(count, ptrArray);
 }
 
 
-//1) func2(..) : har ska du genom anväöndande av dynamisk minnesallokering skapa HAshTabellen eftersom den lokalt skapade "avallokeras" när kösningen lämnar funktionen
+//kanske fixad? 1) func2(..) : har ska du genom användande av dynamisk minnesallokering skapa HAshTabellen eftersom den lokalt skapade "avallokeras" när lösningen lämnar funktionen
 
-//2) räknaren count blir 1 för mycket när antalet ord som läses räknas, vilket innebär att itertaione i func2 utförs en gång för mycket
-
-
-
-//4) namngivningen med func2 etc är inte ok, det ska vara namn som anger vad "det handlar om"
-HashTable<EngWord>* func2(int count,EngWord* arrayPtr)
+HashTable<EngWord>* addWords2Dictionary(int count, EngWord *arrayPtr)
 {
     HashTable<EngWord> *array;
-    HashTable<EngWord> obj(count*2);
-    array=&obj;
+    array= new HashTable<EngWord>(count*2);
+
     for (int i = 0; i < count ; ++i)
     {
         array->insert(EngWord(arrayPtr[i]));
@@ -193,7 +277,12 @@ HashTable<EngWord>* func2(int count,EngWord* arrayPtr)
     cout<<"Load factor: "<<array->loadFactor()<<endl;
     return array;
 }
-void func3(HashTable<EngWord>* origin)
+
+
+
+
+
+void englishSentenceAnalysis(HashTable<EngWord> *origin)
 {
     //En funktion(3) i vilken användaren matar in en engelsk mening vilken avslutas med en
     //punkt (.) och får besked om vilka ord som inte ingick i ordlistan. De ord som inte ingick i
@@ -235,7 +324,7 @@ void func3(HashTable<EngWord>* origin)
             }
     }
 }
-void func4(HashTable<EngWord>* origin)
+void addOneEnglishWord2Dictionary(HashTable<EngWord> *origin)
 {
     //En funktion(4) i vilken användaren matar in engelska ord som läggs in i hashtabellen. Om
     //ett ord redan finns i tabellen ska detta meddelas och ordet läggs inte in i tabellen.
@@ -255,7 +344,7 @@ void func4(HashTable<EngWord>* origin)
         }
     }while(tolower(choice[0]) != 'n');
 }
-void func5(HashTable<EngWord>* origin)
+void rmENGwordFromDictionary(HashTable<EngWord> *origin)
 {
     //En funktion(5) i vilken användaren matar in engelska ord som ska tas bort från
     //hashtabellen. Om ett ord inte finns i hashtabellen meddelas detta.
