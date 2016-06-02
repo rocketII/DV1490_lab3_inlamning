@@ -71,6 +71,8 @@ HashTable<HashElement>::~HashTable()
     delete[] this->array;
     delete[] this->MarkerArray;
 }
+
+
 template <typename HashElement>
 //fix code:  0x1
 // Contains är inte ok eftersomden utför linjärsökning från position 0 och framåt,
