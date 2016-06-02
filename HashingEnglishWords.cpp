@@ -274,6 +274,7 @@ HashTable<EngWord>* addWords2Dictionary(int count, EngWord *arrayPtr)
     {
         array->insert(EngWord(arrayPtr[i]));
     }
+    delete[] arrayPtr;
     cout<<"Load factor: "<<array->loadFactor()<<endl;
     return array;
 }

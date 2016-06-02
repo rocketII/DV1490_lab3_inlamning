@@ -36,7 +36,7 @@ private:
 	int hashTableSize;
 	int myHash(const HashElement &elem) const
 	{ 
-		static Hash<HashElement> hashFunc;
+		static Hash<HashElement> hashFunc;     //hashTableSize == 0 combined with % creates trouble.
 		return hashFunc(elem) % hashTableSize; // hashFunc(elem) is a call of the defined operator() for HashElement
 	}
 public:
@@ -158,12 +158,10 @@ bool HashTable<HashElement>::remove(const HashElement &elem)
     bool flag = false;
     int rmAtIndex;
     rmAtIndex = myHash(elem);
-    //error: ‘EngWord’ does not name a type dynamic_cast<EngWord>
-    //                                                       ^
+
     if(this->MarkerArray[rmAtIndex] == Marker::OCCUPIED)
     {
-        //error: ‘EngWord’ does not name a type dynamic_cast<EngWord>
-        //                                                       ^
+
             if ((static_cast<HashElement>(this->array[rmAtIndex]) != (static_cast<HashElement>(elem))))
             {
                 //linear probing. Meaning search for empty space to place obj
@@ -171,8 +169,7 @@ bool HashTable<HashElement>::remove(const HashElement &elem)
                 {
                     if(this->MarkerArray[i] == Marker::OCCUPIED)
                     {
-                        //error: ‘EngWord’ does not name a type dynamic_cast<EngWord>
-                        //                                                       ^
+
                         if((static_cast<HashElement>(this->array[rmAtIndex]) == (static_cast<HashElement>(elem))))
                         {
                             flag = true;
@@ -197,6 +194,17 @@ bool HashTable<HashElement>::remove(const HashElement &elem)
                             return flag;
                         }
                     }
+                }
+            }
+            else
+            {
+                if((static_cast<HashElement>(this->array[rmAtIndex]) == (static_cast<HashElement>(elem))))
+                {
+                    flag = true;
+                    this->array[rmAtIndex] = HashElement();
+                    this->MarkerArray[rmAtIndex] = Marker::DELETED;
+                    this->nrOfElements--;
+                    return flag;
                 }
             }
 
