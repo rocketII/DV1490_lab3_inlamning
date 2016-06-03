@@ -193,7 +193,7 @@ int main(void)
         //linux
         system("clear");
         //windows
-        system("cls");
+        system("cls"); //
         cout<<"WordList using hash table.\nChose one.\n1.Enter a sentence. Words unrecogniced gets printed to screen.\n2.Add word.\n3.Remove word.\n4.Exit.\nChoice: ";
         getline(cin, menu);
         switch(menu[0])
