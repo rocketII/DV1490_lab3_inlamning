@@ -47,7 +47,7 @@ public:
         //EngWord obj handles strings so we calculate some characteristically number based on ASCII values casted from string char.
 		string first = elem.getHolder();
         //
-        cout << "word: "<< first<<endl;
+        //cout << "word: "<< first<<endl;
         int first_ = (int) first[0];
         int second_=2;
         int third_=3;
@@ -61,7 +61,7 @@ public:
         }
         //man bör tänka på datatypen ints max värdet.
         //DBG
-        cout << "word: "<< first<<" got hash:"<< (first_ * second_ + third_)<<endl;
+        //cout << "word: "<< first<<" got hash:"<< (first_ * second_ + third_)<<endl;
 		return (first_ * second_ + third_);
 	}
 };
