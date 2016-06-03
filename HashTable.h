@@ -17,7 +17,18 @@ done    codes    details
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 #include <string>
+/*fixcode gjort?      beskrivning:
+ *0xA      1          i contains ska villkoret inte vara this->MarkerArray[i] == Marker::OCCUPIED utan i stället this->MarkerArray[i] != Marker::UNTOUCHED
 
+   0xB     1          i insert ska du använda i i stället för insertAtIndex vid inplacering i array
+
+   0xC     1          nrOfElements måste initieras till 0 i konstruktorn
+
+   0xD     1          i remove ger contains(..) den position på vilken elementet finns och det ska då markeras borttaget (ingen sökning ska genomföras).
+
+
+
+  */
 
 using namespace std;
 enum Marker
@@ -56,6 +67,7 @@ template <typename HashElement>
 HashTable<HashElement>::HashTable(int hashTableSize)
 {
     this->hashTableSize = hashTableSize;
+    this->nrOfElements=0;                            // fixcode: 0xC
     Marker guard;
     guard = Marker::UNTOUCHED;
     this->array = new HashElement[this->hashTableSize];
@@ -101,7 +113,7 @@ int HashTable<HashElement>::contains(const HashElement &elem) const
         {
             i= (i+1)%this->hashTableSize;
         }
-    }while(flag && i >-1 && this->MarkerArray[i] == Marker::OCCUPIED );
+    }while(flag && i >-1 && this->MarkerArray[i] != Marker::UNTOUCHED );   //fixcode:  0xA
 	return atIndex;
 }
 template <typename HashElement>
@@ -135,7 +147,7 @@ bool HashTable<HashElement>::insert(const HashElement &elem)
                 if (this->MarkerArray[i] == Marker::UNTOUCHED || this->MarkerArray[i] == Marker::DELETED)
                 {
                     flag = true;
-                    this->array[insertAtIndex] = elem;
+                    this->array[i] = elem;          //fixcode:  0xB
                     this->MarkerArray[i] = Marker::OCCUPIED;
                     this->nrOfElements++;
                     return flag;
@@ -152,62 +164,24 @@ bool HashTable<HashElement>::insert(const HashElement &elem)
     }
 	return flag;
 }
+
+//fixcode: 0xD  modded the entire function.
 template <typename HashElement>
 bool HashTable<HashElement>::remove(const HashElement &elem)
 {
     bool flag = false;
-    int rmAtIndex;
-    rmAtIndex = myHash(elem);
+    int rmAtIndex = this->contains(elem);
 
-    if(this->MarkerArray[rmAtIndex] == Marker::OCCUPIED)
+    if(rmAtIndex != -1)
     {
 
-            if ((static_cast<HashElement>(this->array[rmAtIndex]) != (static_cast<HashElement>(elem))))
-            {
-                //linear probing. Meaning search for empty space to place obj
-                for (int i = rmAtIndex; i < this->getnrOfElements(); ++i)
-                {
-                    if(this->MarkerArray[i] == Marker::OCCUPIED)
-                    {
 
-                        if((static_cast<HashElement>(this->array[rmAtIndex]) == (static_cast<HashElement>(elem))))
-                        {
-                            flag = true;
-                            this->array[rmAtIndex] = HashElement();
-                            this->MarkerArray[i] = Marker::DELETED;
-                            this->nrOfElements--;
-                            return flag;
-                        }
-                    }
-                }
-                for (int i = 0; i < rmAtIndex; ++i)
-                {
-                    if(this->MarkerArray[i] == Marker::OCCUPIED)
-                    {
 
-                        if((static_cast<HashElement>(this->array[rmAtIndex]) == (static_cast<HashElement>(elem))))
-                        {
-                            flag = true;
-                            this->array[rmAtIndex] = HashElement();
-                            this->MarkerArray[i] = Marker::DELETED;
-                            this->nrOfElements--;
-                            return flag;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if((static_cast<HashElement>(this->array[rmAtIndex]) == (static_cast<HashElement>(elem))))
-                {
                     flag = true;
                     this->array[rmAtIndex] = HashElement();
                     this->MarkerArray[rmAtIndex] = Marker::DELETED;
                     this->nrOfElements--;
                     return flag;
-                }
-            }
-
 
     }
     return flag;
