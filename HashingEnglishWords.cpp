@@ -245,7 +245,7 @@ HashTable<EngWord>* ReadData(void)
         myfile.clear();
         myfile.seekg(0, ios::beg); //start att beginning.
         count=0;
-        while ( getline(myfile,tmp) )
+        while ( getline(myfile,tmp, '\r') )
         {
             //debug
             //cout<<count<<' '<<tmp<<'\n';

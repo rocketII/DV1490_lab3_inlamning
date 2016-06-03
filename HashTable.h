@@ -101,6 +101,7 @@ int HashTable<HashElement>::contains(const HashElement &elem) const
     int i =-2;
     bool flag=true;
     i = this->myHash(elem);
+    //sökte "zoo", på plats 1114 hittar vi "zoo\r" den har statusen: OCCUPIED. Felet verka vara inläsning och sparning av ord.
     do
     {
 
