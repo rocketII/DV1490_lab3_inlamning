@@ -217,7 +217,7 @@ int main(void)
     return 0;
 }
 
-
+//depending on the wordlistfile this code must be changed. Here it works for linux systems dealing with windows files where CRLF are inplace.
 HashTable<EngWord>* ReadData(void)
 {
     //o Orden läses från fil
@@ -248,13 +248,13 @@ HashTable<EngWord>* ReadData(void)
         bool result = false;
 
 
-        while ( getline(myfile,tmp, '\r') )
+        while ( getline(myfile,tmp, '\r') ) // use '\n' instead of '\n' for windows.
         {
             //debug
             //cout<<count<<' '<<tmp<<'\n';
             ptrArray[i] = EngWord(tmp);
             i++; count++;
-            myfile.ignore();
+            myfile.ignore(); //linux only when dealing with CRLF '\r''\n'
 
         }
 
