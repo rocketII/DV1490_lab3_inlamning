@@ -329,6 +329,7 @@ void englishSentenceAnalysis(HashTable<EngWord> *origin)
                 cout<<"word "<< word[i]<<" does not exist in table!"<<endl;
             }
     }
+    getchar();
 }
 void addOneEnglishWord2Dictionary(HashTable<EngWord> *origin)
 {
