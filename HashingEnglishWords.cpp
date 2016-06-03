@@ -230,7 +230,7 @@ HashTable<EngWord>* ReadData(void)
     if(!myfile.is_open())
     {
         myfile.close();
-        myfile.open("/root/IDEstorage/DV1490/labbar/DV1490_lab3_inlamning/engWords.txt");
+        myfile.open("./engWords.txt");
     }
     if (myfile.is_open())
     {
