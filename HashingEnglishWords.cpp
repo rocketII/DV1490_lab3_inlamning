@@ -248,7 +248,7 @@ HashTable<EngWord>* ReadData(void)
         bool result = false;
 
 
-        while ( getline(myfile,tmp, '\r') ) // use '\n' instead of '\n' for windows.
+        while ( getline(myfile,tmp, '\r') ) // use '\n' instead of '\n' for windows. read to '\r' then discard/ignore '\n'. when reading words from windows file.
         {
             //debug
             //cout<<count<<' '<<tmp<<'\n';
